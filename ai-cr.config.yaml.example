@@ -1,0 +1,102 @@
+# AI Code Review 配置文件示例
+# 复制此文件为 ai-cr.config.yaml 并根据需要修改
+
+# AI服务配置
+ai:
+  # AI服务提供商: deepseek, openai, moonshot
+  provider: deepseek
+  
+  # 模型名称
+  model: deepseek-coder
+  
+  # 温度参数 (0.0-1.0)
+  temperature: 0.1
+  
+  # 最大token数
+  maxTokens: 4000
+  
+  # 请求超时时间(毫秒)
+  timeout: 30000
+
+# 分析配置
+analysis:
+  # 最大文件大小(字节)
+  maxFileSize: 100000
+  
+  # 单次分析最大文件数
+  maxFilesPerAnalysis: 50
+  
+  # 分析超时时间(秒)
+  timeout: 300
+  
+  # 包含的文件模式
+  includePatterns:
+    - "**/*.{js,ts,jsx,tsx,vue}"
+    - "**/*.{py,java,go,rs,cpp,c}"
+    - "**/*.{php,rb,swift,kt,scala}"
+    - "**/*.{html,css,scss,less}"
+    - "**/*.{json,yaml,yml,xml}"
+    - "**/*.{md,rst,txt}"
+  
+  # 排除的文件模式
+  excludePatterns:
+    - "node_modules/**"
+    - "dist/**"
+    - "build/**"
+    - ".git/**"
+    - "*.min.js"
+    - "*.min.css"
+    - "coverage/**"
+    - "*.log"
+    - "*.tmp"
+    - "*.cache"
+  
+  # 自定义规则
+  customRules:
+    - id: "no-console"
+      name: "禁止使用console"
+      description: "生产代码中不应包含console语句"
+      pattern: "console\\.(log|warn|error|info)"
+      severity: "medium"
+      enabled: true
+    
+    - id: "no-todo"
+      name: "检查TODO注释"
+      description: "提醒处理TODO注释"
+      pattern: "TODO|FIXME|HACK"
+      severity: "low"
+      enabled: true
+
+# 输出配置
+output:
+  # 输出格式: markdown, console, json, html
+  format: markdown
+  
+  # 输出目录
+  directory: ./reports
+  
+  # 输出文件名(可选)
+  filename: null
+  
+  # 是否包含汇总信息
+  includeSummary: true
+  
+  # 是否包含详细信息
+  includeDetails: true
+  
+  # 是否按文件分组
+  groupByFile: true
+
+# Web服务配置
+web:
+  # 监听主机
+  host: 127.0.0.1
+  
+  # 监听端口
+  port: 8000
+  
+  # 调试模式
+  debug: false
+  
+  # 启用CORS
+  cors: true
