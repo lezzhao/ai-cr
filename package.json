@@ -1,9 +1,25 @@
 {
-  "name": "ai-cr",
-  "version": "0.1.0",
+  "name": "@lezzhao/ai-cr",
+  "version": "0.0.1-beta.1",
   "description": "AI驱动的代码审查工具，支持Git hooks集成和智能代码质量分析",
   "type": "module",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./cli": {
+      "import": "./dist/cli.js",
+      "types": "./dist/cli.d.ts"
+    }
+  },
+  "files": [
+    "dist/",
+    "LICENSE",
+    "README.md"
+  ],
   "bin": {
     "ai-cr": "dist/cli.js"
   },
@@ -24,7 +40,12 @@
     "format": "prettier --write src/**/*.ts",
     "web:dev": "tsx watch src/web/server.ts",
     "web:build": "tsc && cd src/web && npm run build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prepublishOnly": "npm run build",
+    "pre-publish-check": "node scripts/pre-publish-check.js",
+    "release": "bumpp && npm publish",
+    "release:beta": "bumpp --preid=beta --tag=beta && npm publish --tag beta",
+    "release:alpha": "bumpp --preid=alpha --tag=alpha && npm publish --tag alpha"
   },
   "keywords": [
     "ai",
@@ -34,35 +55,44 @@
     "typescript",
     "deepseek",
     "openai",
-    "moonshot"
+    "moonshot",
+    "automation",
+    "quality",
+    "linting",
+    "static-analysis"
   ],
-  "author": "levan",
+  "author": {
+    "name": "levan",
+    "email": "zhaole.work@gmail.com"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lezzhao/ai-cr.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lezzhao/ai-cr/issues"
+  },
+  "homepage": "https://github.com/lezzhao/ai-cr#readme",
   "dependencies": {
     "@fastify/cors": "^11.1.0",
     "@fastify/static": "^8.2.0",
-    "@types/node": "^20.10.0",
     "axios": "^1.6.2",
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
     "dotenv": "^16.3.1",
+    "fast-glob": "^3.3.3",
     "fastify": "^5.0.0",
-    "git-parse": "^1.0.0",
-    "glob": "^10.3.10",
-    "inquirer": "^9.2.12",
     "marked": "^9.1.6",
-    "mime-types": "^2.1.35",
     "ora": "^7.0.1",
-    "simple-git": "^3.19.1",
-    "ws": "^8.14.2",
-    "yaml": "^2.3.4"
+    "simple-git": "^3.19.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.8",
-    "@types/mime-types": "^2.1.4",
-    "@types/ws": "^8.5.10",
+    "@types/node": "^24.5.2",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
+    "bumpp": "^10.2.3",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
