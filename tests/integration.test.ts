@@ -1,15 +1,45 @@
-import { describe, test, expect, beforeAll, afterAll } from '@jest/globals';
-import { configManager } from '../src/config/index.js';
-import { CodeAnalyzer } from '../src/core/analyzer.js';
-import { GitIntegration } from '../src/integrations/git.js';
-import { GitHooksIntegration } from '../src/integrations/git-hooks.js';
-import { AIProviderFactory } from '../src/services/ai-factory.js';
-import { ReportGenerator } from '../src/core/report-generator.js';
+// Jest globals are available without import
+import { configManager } from '../src/config/index';
+import { CodeAnalyzer } from '../src/core/analyzer';
+import { GitIntegration } from '../src/integrations/git';
+import { GitHooksIntegration } from '../src/integrations/git-hooks';
+import { AIProviderFactory } from '../src/services/ai-factory';
+import { ReportGenerator } from '../src/core/report-generator';
 
 describe('AI Code Review Integration Tests', () => {
   let gitIntegration: GitIntegration;
   let analyzer: CodeAnalyzer;
   let reportGenerator: ReportGenerator;
+
+  beforeAll(() => {
+    // 创建测试报告目录
+    const fs = require('fs');
+    const path = require('path');
+    const testReportsDir = path.join(process.cwd(), 'test-reports');
+    try {
+      fs.mkdirSync(testReportsDir, { recursive: true });
+    } catch (error) {
+      // 目录可能已存在，忽略错误
+    }
+    
+    // 设置测试环境变量
+    process.env['DEEPSEEK_API_KEY'] = 'test-deepseek-key';
+    process.env['OPENAI_API_KEY'] = 'test-openai-key';
+    process.env['MOONSHOT_API_KEY'] = 'test-moonshot-key';
+    process.env['DEFAULT_AI_PROVIDER'] = 'mock';
+  });
+
+  beforeEach(() => {
+    // 确保测试报告目录存在
+    const fs = require('fs');
+    const path = require('path');
+    const testReportsDir = path.join(process.cwd(), 'test-reports');
+    try {
+      fs.mkdirSync(testReportsDir, { recursive: true });
+    } catch (error) {
+      // 目录可能已存在，忽略错误
+    }
+  });
 
   beforeAll(async () => {
     gitIntegration = new GitIntegration();

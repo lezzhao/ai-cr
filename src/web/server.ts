@@ -7,8 +7,16 @@ import { WebAPIResponse, AnalysisStatus } from '../types/index.js';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// 在Jest环境中避免使用import.meta
+let webFilename: string;
+try {
+  // @ts-ignore - 在Jest环境中import.meta可能不可用
+  webFilename = fileURLToPath(import.meta.url);
+} catch {
+  // 在Jest环境中使用默认值
+  webFilename = process.cwd();
+}
+const webDirname = dirname(webFilename);
 
 // 存储分析状态
 const analysisStatuses = new Map<string, AnalysisStatus>();
@@ -29,7 +37,7 @@ export async function startWebServer(host: string = '127.0.0.1', port: number = 
     // 注册静态文件服务
     const staticPlugin = (await import('@fastify/static')).default;
     await fastify.register(staticPlugin, {
-      root: join(__dirname, 'public'),
+      root: join(webDirname, 'public'),
       prefix: '/static/'
     });
 
@@ -318,6 +326,11 @@ async function performAnalysis(analysisId: string, type: string, commitHash?: st
 }
 
 // 如果直接运行此文件，启动服务器
-if (import.meta.url === `file://${process.argv[1]}`) {
-  startWebServer();
+try {
+  // @ts-ignore - 在Jest环境中import.meta可能不可用
+  if (import.meta.url === `file://${process.argv[1]}`) {
+    startWebServer();
+  }
+} catch {
+  // 在Jest环境中忽略
 }

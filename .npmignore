@@ -1,0 +1,58 @@
+# Source files
+src/
+tests/
+test-files/
+test-manual.js
+
+# Development files
+*.config.yaml.example
+jest.config.js
+tsconfig.json
+.eslintrc*
+.prettierrc*
+
+# Documentation
+CODE_REVIEW_SUMMARY.md
+QUICKSTART.md
+TESTING.md
+README.md
+
+# Reports
+reports/
+
+# Development dependencies
+node_modules/
+pnpm-lock.yaml
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Environment files
+.env*
+!.env.example
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+.nyc_output
+*.lcov
+
+# Temporary files
+tmp/
+temp/
+
+# Git
+.git/
+.gitignore
+
+# Build artifacts that shouldn't be in package
+*.tsbuildinfo

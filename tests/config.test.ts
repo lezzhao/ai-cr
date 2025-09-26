@@ -3,10 +3,23 @@ import { configManager } from '../src/config';
 describe('ConfigManager', () => {
   beforeEach(() => {
     // 重置环境变量
-    delete process.env.DEEPSEEK_API_KEY;
-    delete process.env.OPENAI_API_KEY;
-    delete process.env.MOONSHOT_API_KEY;
-    delete process.env.DEFAULT_AI_PROVIDER;
+    delete process.env['DEEPSEEK_API_KEY'];
+    delete process.env['OPENAI_API_KEY'];
+    delete process.env['MOONSHOT_API_KEY'];
+    delete process.env['DEFAULT_AI_PROVIDER'];
+    
+    // 重新初始化配置管理器
+    configManager.updateConfig({
+      ai: {
+        provider: 'deepseek',
+        apiKey: '',
+        baseUrl: 'https://api.deepseek.com/v1',
+        model: 'deepseek-coder',
+        temperature: 0.7,
+        maxTokens: 2000,
+        timeout: 30000
+      }
+    });
   });
 
   test('should load default configuration', () => {
@@ -30,7 +43,11 @@ describe('ConfigManager', () => {
       ai: {
         provider: 'openai' as any,
         apiKey: 'test-key',
-        baseUrl: 'https://api.openai.com/v1'
+        baseUrl: 'https://api.openai.com/v1',
+        model: 'gpt-3.5-turbo',
+        temperature: 0.7,
+        maxTokens: 2000,
+        timeout: 30000
       }
     };
     

@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![npm version](https://img.shields.io/npm/v/@lezzhao/ai-cr)](https://www.npmjs.com/package/@lezzhao/ai-cr)
 
 AI驱动的智能代码审查工具，支持Git hooks集成，提供多维度代码质量分析和友好的Web界面展示。
 
@@ -12,7 +13,7 @@ AI驱动的智能代码审查工具，支持Git hooks集成，提供多维度代
 - 🚀 **Git Hooks集成**: 支持pre-commit、commit-msg、post-commit自动化分析
 - 🌟 **多AI服务支持**: 支持DeepSeek、OpenAI、Moonshot等主流AI服务
 - 📋 **详细反馈报告**: 提供代码质量、安全性、性能等多维度分析
-- 📄 **多种输出格式**: 支持Markdown、HTML、JSON、控制台输出
+- 📄 **多种输出格式**: 支持Markdown、JSON、控制台输出
 - 🛠️ **高度可配置**: 支持自定义分析规则和反馈格式
 - 💬 **中文友好**: 完整的中文界面和反馈
 - 🌐 **Web界面**: 现代化的Web界面，实时查看分析结果
@@ -22,59 +23,49 @@ AI驱动的智能代码审查工具，支持Git hooks集成，提供多维度代
 ### 安装
 
 ```bash
-# 克隆项目
-git clone https://github.com/your-username/ai-cr.git
-cd ai-cr
+# 全局安装（推荐用于CLI工具）
+npm install -g @lezzhao/ai-cr
 
-# 安装依赖
-npm install
-
-# 构建项目
-npm run build
+# 在项目中使用
+npm install @lezzhao/ai-cr
 ```
 
 ### 配置
 
-1. 复制环境配置文件：
+1. 复制配置示例文件：
 ```bash
-cp .env.example .env
+cp examples/ai-cr.config.yaml.example ai-cr.config.yaml
 ```
 
-2. 编辑 `.env` 文件，配置AI服务API密钥：
-```env
-# DeepSeek (推荐，性价比高)
-DEEPSEEK_API_KEY=your_deepseek_api_key_here
-DEEPSEEK_BASE_URL=https://api.deepseek.com
-
-# OpenAI
-OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_BASE_URL=https://api.openai.com/v1
-
-# Moonshot
-MOONSHOT_API_KEY=your_moonshot_api_key_here
-MOONSHOT_BASE_URL=https://api.moonshot.cn/v1
-
-# 默认AI服务提供商
-DEFAULT_AI_PROVIDER=deepseek
+2. 编辑 `ai-cr.config.yaml` 文件，配置AI服务API密钥：
+```yaml
+ai:
+  provider: deepseek  # deepseek, openai, moonshot, mock
+  apiKey: your_api_key_here
+  baseUrl: https://api.deepseek.com/v1
+  model: deepseek-coder
+  temperature: 0.7
+  maxTokens: 2000
+  timeout: 30000
 ```
 
 ### 基本使用
 
 ```bash
 # 分析暂存区文件
-npx ai-cr analyze --staged
+ai-cr analyze --staged
 
 # 分析工作区文件
-npx ai-cr analyze --working
+ai-cr analyze --working
 
 # 分析指定提交
-npx ai-cr analyze --commit HEAD
+ai-cr analyze --commit HEAD
 
 # 指定输出格式
-npx ai-cr analyze --staged --format markdown --output ./reports/report.md
+ai-cr analyze --staged --format markdown --output ./reports/report.md
 
 # 使用指定AI服务
-npx ai-cr analyze --staged --provider openai
+ai-cr analyze --staged --provider openai
 ```
 
 ## 🔧 Git Hooks 集成
@@ -83,13 +74,13 @@ npx ai-cr analyze --staged --provider openai
 
 ```bash
 # 安装所有Git hooks
-npx ai-cr install-hooks
+ai-cr install-hooks
 
 # 检查hooks状态
-npx ai-cr hooks-status
+ai-cr hooks-status
 
 # 卸载Git hooks
-npx ai-cr uninstall-hooks
+ai-cr uninstall-hooks
 ```
 
 安装后，Git hooks将自动在以下时机运行：
@@ -104,13 +95,47 @@ npx ai-cr uninstall-hooks
 
 ```bash
 # 启动Web服务
-npx ai-cr web
+ai-cr web
 
 # 指定端口和主机
-npx ai-cr web --port 3000 --host 0.0.0.0
+ai-cr web --port 3000 --host 0.0.0.0
 ```
 
 访问 `http://localhost:8000` 查看Web界面。
+
+## 💻 编程接口
+
+### JavaScript/TypeScript 使用
+
+```javascript
+import { 
+  CodeAnalyzer, 
+  AIProviderFactory, 
+  configManager 
+} from '@lezzhao/ai-cr';
+
+// 获取配置
+const config = configManager.getConfig();
+
+// 创建AI提供者
+const aiProvider = AIProviderFactory.createProvider(
+  config.ai.provider, 
+  config.ai
+);
+
+// 创建代码分析器
+const analyzer = new CodeAnalyzer(config);
+
+// 分析文件
+const result = await analyzer.analyzeFile('./src/example.js');
+console.log(result);
+```
+
+### 更多示例
+
+查看 `examples/` 目录中的完整使用示例：
+- `examples/basic-usage.js` - JavaScript 基本使用
+- `examples/typescript-usage.ts` - TypeScript 高级使用
 
 ## 📊 分析报告
 
@@ -127,7 +152,6 @@ npx ai-cr web --port 3000 --host 0.0.0.0
 ### 输出格式
 
 - **Markdown**: 适合文档和报告
-- **HTML**: 适合在浏览器中查看
 - **JSON**: 适合程序化处理
 - **控制台**: 适合命令行查看
 
@@ -197,8 +221,8 @@ ai-cr/
 │   ├── utils/              # 工具函数
 │   └── types/              # 类型定义
 ├── tests/                  # 测试文件
-├── docs/                   # 文档
-└── hooks/                  # Git hooks模板
+├── examples/               # 使用示例
+└── dist/                   # 编译输出
 ```
 
 ### 开发命令
@@ -247,8 +271,8 @@ npm run web:dev
 
 如果你遇到问题或有建议，请：
 
-- 提交 [Issue](https://github.com/your-username/ai-cr/issues)
-- 查看 [文档](https://github.com/your-username/ai-cr/wiki)
+- 提交 [Issue](https://github.com/lezzhao/ai-cr/issues)
+- 查看 [文档](https://github.com/lezzhao/ai-cr/wiki)
 - 联系维护者
 
 ---

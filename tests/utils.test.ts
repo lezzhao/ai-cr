@@ -48,6 +48,6 @@ describe('Utils', () => {
     const truncated = truncateString(longString, 20);
     
     expect(truncated.length).toBeLessThanOrEqual(23); // 20 + '...'
-    expect(truncated).toEndWith('...');
+    expect(truncated.endsWith('...')).toBe(true);
   });
 });

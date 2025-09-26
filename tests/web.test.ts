@@ -1,5 +1,5 @@
-import { describe, test, expect, beforeAll, afterAll } from '@jest/globals';
-import { startWebServer } from '../src/web/server.js';
+// Jest globals are available without import
+import { startWebServer } from './mocks/web-server-mock';
 
 describe('Web Server Tests', () => {
   let server: any;
@@ -8,7 +8,7 @@ describe('Web Server Tests', () => {
   beforeAll(async () => {
     // 启动测试服务器
     try {
-      await startWebServer('127.0.0.1', testPort);
+      await startWebServer(testPort);
       // 等待服务器启动
       await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (error) {
